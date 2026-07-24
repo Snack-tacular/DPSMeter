@@ -135,6 +135,57 @@ namespace DpsMeter
             }
         }
 
+        public static void SyncFromNetwork()
+        {
+            try
+            {
+                var psm = PlayerStatisticsManager.I ?? UnityEngine.Object.FindAnyObjectByType<PlayerStatisticsManager>();
+                if (psm == null) return;
+
+                PlayerTeam[] teams = new[] { PlayerTeam.Player1, PlayerTeam.Player2, PlayerTeam.Player3, PlayerTeam.Player4 };
+                foreach (var team in teams)
+                {
+                    float totalDmg = 0f;
+                    var statsList = psm.GetDamageBySourceStats(team);
+                    if (statsList != null)
+                    {
+                        for (int i = 0; i < statsList.Count; i++)
+                            totalDmg += statsList[i].Damage;
+                    }
+
+                    int kills = psm.GetKills(team);
+
+                    if (totalDmg > 0 || kills > 0)
+                    {
+                        int key = (int)team;
+                        if (!Records.TryGetValue(key, out var rec))
+                        {
+                            var (pName, icon, isSelf) = ResolvePlayerInfo(team);
+                            rec = new PlayerDamageRecord
+                            {
+                                Team           = team,
+                                DisplayName    = pName,
+                                IconSprite     = icon,
+                                IsSelf         = isSelf,
+                                MatchStartTime = MatchStartTime
+                            };
+                            Records[key] = rec;
+                        }
+
+                        if (totalDmg > rec.TotalDamage) rec.TotalDamage = totalDmg;
+                        if (kills > rec.Kills) rec.Kills = kills;
+
+                        if (!MatchActive && (totalDmg > 0 || kills > 0))
+                        {
+                            MatchActive = true;
+                            if (MatchStartTime <= 0) MatchStartTime = Time.time;
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
         private static (string playerName, Sprite? heroIcon, bool isSelf) ResolvePlayerInfo(PlayerTeam team)
         {
             string pName = "";
@@ -630,6 +681,9 @@ namespace DpsMeter
         private void RefreshUI()
         {
             if (_windowRect == null || _scrollContent == null) return;
+            
+            DpsData.SyncFromNetwork();
+            
             float now = Time.time;
 
             float winW     = Plugin.CfgWindowWidth?.Value ?? 380f;
