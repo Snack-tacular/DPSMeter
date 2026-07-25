@@ -1,33 +1,34 @@
 # Sineus Arena - DPS Meter
 
-A sleek, highly customizable BepInEx Damage & DPS Meter mod for **Sineus Arena** (inspired by *Details! Damage Meter* for World of Warcraft).
+A World of Warcraft (Details! style) damage meter mod for Sineus Arena.
 
-![DPS Meter Preview](preview.png)
+<p align="center">
+  <img src="preview.png" alt="DPS Meter Preview" width="650" />
+</p>
 
-## ⚔️ Features
+## Features
 
-- 📊 **Real-Time Multiplayer Combat Tracking**: Tracks total damage, DPS, total kills, and percentage share (`%`) of party damage across all players in multiplayer matches.
-- 🖼️ **Equipped Hero Skin Icons**: Displays each player's active character skin preview icon at the start of their row.
-- ⏱️ **HUD Timer Sync**: Synchronizes seamlessly with `SineusArena.SessionTimerService` for 1:1 match timer sync and accurate DPS calculations.
-- 🎨 **Subtle Modern UI Aesthetics**: Premium dark glassmorphism design with rank color indicators (Gold 🥇, Silver 🥈, Bronze 🥉), thin blue border frame, and subtle damage bar fills.
-- ⚙️ **Configurable BepInEx Settings**: Customize toggle hotkey (Default: `Delete`), bar opacity, row height, window width, font size, and position auto-saving via `com.github.antigravity.dpsmeter.cfg`.
-- ⚡ **Zero-Lag Performance**: Optimized caching with zero scene-wide object scans during combat.
+- Real-time multiplayer tracking (Total Damage, DPS, Kills, Damage %)
+- Shows selected character skin icons in player rows
+- Synced with the in-game HUD match timer
+- Draggable overlay window with position auto-saving
+- Configurable via BepInEx (`com.github.antigravity.dpsmeter.cfg`) for hotkeys, sizes, and opacity
 
-## 📥 Installation
+## Installation
 
-1. Install [BepInEx 5](https://github.com/BepInEx/BepInEx) for Sineus Arena.
-2. Download `DpsMeter.dll` from the latest [Release](https://github.com/Snack-tacular/DPSMeter/releases).
-3. Place `DpsMeter.dll` into your `Sineus Arena/BepInEx/plugins/` directory.
-4. Launch the game! Press **Delete** to toggle the DPS meter window on/off.
+1. Make sure [BepInEx 5](https://github.com/BepInEx/BepInEx) is installed for Sineus Arena.
+2. Download `DpsMeter.dll` from [Releases](https://github.com/Snack-tacular/DPSMeter/releases).
+3. Drop `DpsMeter.dll` into `Sineus Arena/BepInEx/plugins/`.
+4. Press **Delete** in-game to toggle the overlay on/off.
 
-## 🛠️ Building from Source
+## Building from Source
 
-Requirements: [.NET Standard 2.1 SDK](https://dotnet.microsoft.com/download)
+Requires .NET Standard 2.1 SDK.
 
 ```bash
 dotnet build DpsMeter.csproj -c Release
 ```
 
-## 📜 License
+## License
 
-MIT License
+MIT
