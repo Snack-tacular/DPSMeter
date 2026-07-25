@@ -2,6 +2,8 @@
 
 A sleek, highly customizable BepInEx Damage & DPS Meter mod for **Sineus Arena** (inspired by *Details! Damage Meter* for World of Warcraft).
 
+![DPS Meter Preview](preview.png)
+
 ## ⚔️ Features
 
 - 📊 **Real-Time Multiplayer Combat Tracking**: Tracks total damage, DPS, total kills, and percentage share (`%`) of party damage across all players in multiplayer matches.
