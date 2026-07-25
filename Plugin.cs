@@ -135,6 +135,13 @@ namespace DpsMeter
             }
         }
 
+        public static bool IsBombSource(string sourceName)
+        {
+            if (string.IsNullOrEmpty(sourceName)) return false;
+            string lower = sourceName.ToLowerInvariant();
+            return lower.Contains("bomb") || lower.Contains("nuke") || lower.Contains("pickup");
+        }
+
         public static void SyncFromNetwork()
         {
             try
@@ -150,7 +157,11 @@ namespace DpsMeter
                     if (statsList != null)
                     {
                         for (int i = 0; i < statsList.Count; i++)
-                            totalDmg += statsList[i].Damage;
+                        {
+                            string srcName = statsList[i].SourceName.ToString();
+                            if (!IsBombSource(srcName))
+                                totalDmg += statsList[i].Damage;
+                        }
                     }
 
                     int kills = psm.GetKills(team);
@@ -375,12 +386,44 @@ namespace DpsMeter
         }
     }
 
+    [HarmonyPatch(typeof(CollectableItemBomb), "DrainPendingDamage")]
+    public static class BombDrainDamagePatch
+    {
+        public static bool IsExecutingBomb;
+
+        [HarmonyPrefix]
+        public static void Prefix() => IsExecutingBomb = true;
+
+        [HarmonyPostfix]
+        public static void Postfix() => IsExecutingBomb = false;
+    }
+
+    [HarmonyPatch(typeof(CollectableItemBomb), "ApplyCollectReward")]
+    public static class BombCollectRewardPatch
+    {
+        [HarmonyPrefix]
+        public static void Prefix() => BombDrainDamagePatch.IsExecutingBomb = true;
+
+        [HarmonyPostfix]
+        public static void Postfix() => BombDrainDamagePatch.IsExecutingBomb = false;
+    }
+
     [HarmonyPatch(typeof(PlayerStatisticsManager), nameof(PlayerStatisticsManager.AddDamage))]
     public static class AddDamagePatch
     {
+        [HarmonyPrefix]
+        public static bool Prefix(PlayerTeam team, string sourceName, float amount)
+        {
+            if (BombDrainDamagePatch.IsExecutingBomb || DpsData.IsBombSource(sourceName))
+                return false;
+            return true;
+        }
+
         [HarmonyPostfix]
         public static void Postfix(PlayerTeam team, string sourceName, float amount)
         {
+            if (BombDrainDamagePatch.IsExecutingBomb || DpsData.IsBombSource(sourceName))
+                return;
             DpsData.RecordDamage(team, amount);
         }
     }
@@ -388,9 +431,19 @@ namespace DpsMeter
     [HarmonyPatch(typeof(PlayerStatisticsManager), nameof(PlayerStatisticsManager.AddKill))]
     public static class AddKillPatch
     {
+        [HarmonyPrefix]
+        public static bool Prefix(PlayerTeam team, int amount)
+        {
+            if (BombDrainDamagePatch.IsExecutingBomb)
+                return false;
+            return true;
+        }
+
         [HarmonyPostfix]
         public static void Postfix(PlayerTeam team, int amount)
         {
+            if (BombDrainDamagePatch.IsExecutingBomb)
+                return;
             DpsData.RecordKill(team, amount);
         }
     }
