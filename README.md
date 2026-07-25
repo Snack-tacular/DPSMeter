@@ -3,7 +3,7 @@
 A World of Warcraft (Details! style) damage meter mod for Sineus Arena.
 
 <p align="center">
-  <img src="preview.png" alt="DPS Meter Preview" width="381" />
+  <img src="preview.png" alt="DPS Meter Preview" width="380" />
 </p>
 
 ## Features
