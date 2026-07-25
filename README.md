@@ -10,7 +10,6 @@ A World of Warcraft (Details! style) damage meter mod for Sineus Arena.
 
 - Real-time multiplayer tracking (Total Damage, DPS, Kills, Damage %)
 - Shows selected character skin icons in player rows
-- Synced with the in-game HUD match timer
 - Draggable overlay window with position auto-saving
 - Configurable via BepInEx (`com.github.antigravity.dpsmeter.cfg`) for hotkeys, sizes, and opacity
 
