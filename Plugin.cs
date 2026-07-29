@@ -139,12 +139,7 @@ namespace DpsMeter
         {
             if (string.IsNullOrEmpty(sourceName)) return false;
             string lower = sourceName.ToLowerInvariant();
-            return lower.Contains("bomb") 
-                || lower.Contains("nuke") 
-                || lower.Contains("pickup")
-                || lower.Contains("acid") 
-                || lower.Contains("toxic")
-                || lower.Contains("poison");
+            return lower.Contains("bomb") || lower.Contains("nuke") || lower.Contains("pickup");
         }
 
         public static void SyncFromNetwork()
